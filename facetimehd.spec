@@ -6,7 +6,7 @@
 
 %define module facetimehd
 %define version 0.1
-%define url https://github.com/patjak/bcwc_pcie
+%define baseurl https://github.com/patjak/
 
 Summary: %{module} %{version} dkms package
 Name: %{module}
@@ -16,10 +16,12 @@ License: GPLv2
 Group: System Environment/Kernel
 Requires: dkms >= 1.00
 Requires: bash
-URL: %{url}
+URL: %{baseurl}%{srcname}
 
-Source0: %{url}/archive/%{commit}/%{srcname}-%{version}-%{shortcommit}.tar.gz
-Source1: https://github.com/patjak/facetimehd-firmware/archive/577f143e3be592665988bba7f1eebdabbe2e4177/facetimehd-firmware-577f143.tar.gz
+Source0: %{baseurl}%{srcname}/archive/%{commit}/%{srcname}-%{version}-%{shortcommit}.tar.gz
+Source1: %{baseurl}facetimehd-firmware/archive/master/facetimehd-firmware-master.tar.gz
+Source2: facetimehd-modules-load.conf
+Source3: facetimehd-dracut.conf
 
 %description
 This package contains %{module} module wrapped for the DKMS framework.
@@ -28,8 +30,8 @@ This package contains %{module} module wrapped for the DKMS framework.
 %setup -q -c -T -a 0
 mv %{srcname}-%{commit}/ %{module}-%{version}/
 %setup -q -T -D -a 1
-mv facetimehd-firmware-577f143e3be592665988bba7f1eebdabbe2e4177/* %{module}-%{version}/firmware/
-rm -rf facetimehd-firmware-577f143e3be592665988bba7f1eebdabbe2e4177
+mv facetimehd-firmware-master/* %{module}-%{version}/firmware/
+rm -rf facetimehd-firmware-master
 
 %install
 if [ "$RPM_BUILD_ROOT" != "/" ]; then
@@ -49,6 +51,12 @@ cp %{module}-%{version}/firmware/firmware.bin $RPM_BUILD_ROOT/usr/lib/firmware/%
 mkdir -p $RPM_BUILD_ROOT/usr/share/doc/%{module}/
 cp %{module}-%{version}/README.md $RPM_BUILD_ROOT/usr/share/doc/%{module}/
 
+mkdir -p $RPM_BUILD_ROOT/etc/dracut.conf.d/
+cp $RPM_SOURCE_DIR/facetimehd-dracut.conf $RPM_BUILD_ROOT/etc/dracut.conf.d/facetimehd.conf
+
+mkdir -p $RPM_BUILD_ROOT/etc/modules-load.d/
+cp $RPM_SOURCE_DIR/facetimehd-modules-load.conf $RPM_BUILD_ROOT/etc/modules-load.d/facetimehd.conf
+
 %clean
 if [ "$RPM_BUILD_ROOT" != "/" ]; then
 	rm -rf $RPM_BUILD_ROOT
@@ -56,6 +64,8 @@ fi
 
 %files
 %defattr(-,root,root)
+%config /etc/dracut.conf.d/facetimehd.conf
+%config /etc/modules-load.d/facetimehd.conf
 /usr/src/%{module}-%{version}/
 /usr/share/doc/%{module}/
 /usr/lib/firmware/%{module}/
@@ -84,3 +94,9 @@ echo -e
 echo -e "Uninstall of %{module} module (version %{version}) beginning:"
 dkms remove -m %{module} -v %{version} --all --rpm_safe_upgrade
 exit 0
+
+%changelog
+
+* Wed May 13 2020 Stanislav Ashirov <stas.ashirov@gmail.com>
+
+- Initial RPM release
