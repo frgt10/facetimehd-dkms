@@ -18,7 +18,6 @@ Requires: bash
 URL: https://github.com/patjak/bcwc_pcie/
 
 Source0: https://github.com/patjak/bcwc_pcie/archive/%{commit}/%{srcname}-%{version}-%{shortcommit}.tar.gz
-Source2: facetimehd-modules-load.conf
 
 %description
 This package contains %{module} module wrapped for the DKMS framework.
