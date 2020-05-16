@@ -9,8 +9,8 @@
 
 Summary: %{module} %{version} dkms package
 Name: %{module}
-Version: %{version}-%{commitdate}git%{shortcommit}
-Release: 2dkms
+Version: %{version}
+Release: %{commitdate}git%{shortcommit}.2dkms
 License: GPLv2
 Group: System Environment/Kernel
 Requires: dkms >= 1.00
@@ -25,25 +25,20 @@ This package contains %{module} module wrapped for the DKMS framework.
 
 %prep
 %setup -q -c -T -a 0
-mv %{srcname}-%{commit}/ %{module}-%{version}/
 
 %install
 if [ "$RPM_BUILD_ROOT" != "/" ]; then
 	rm -rf $RPM_BUILD_ROOT
 fi
 
-pushd %{module}-%{version}/firmware/
-make
-popd
-
 mkdir -p $RPM_BUILD_ROOT/usr/src/%{module}-%{version}/
-cp -rf %{module}-%{version}/* $RPM_BUILD_ROOT/usr/src/%{module}-%{version}/
+cp -rf %{srcname}-%{commit}/* $RPM_BUILD_ROOT/usr/src/%{module}-%{version}/
 
 mkdir -p $RPM_BUILD_ROOT/usr/share/doc/%{module}/
-cp %{module}-%{version}/README.md $RPM_BUILD_ROOT/usr/share/doc/%{module}/
+cp %{srcname}-%{commit}/README.md $RPM_BUILD_ROOT/usr/share/doc/%{module}/
 
 mkdir -p $RPM_BUILD_ROOT/etc/modules-load.d/
-cp $RPM_SOURCE_DIR/facetimehd-modules-load.conf $RPM_BUILD_ROOT/etc/modules-load.d/facetimehd.conf
+echo -e "# Load facetimehd.ko at boot\nfacetimehd" > $RPM_BUILD_ROOT/etc/modules-load.d/facetimehd.conf
 
 %clean
 if [ "$RPM_BUILD_ROOT" != "/" ]; then
@@ -55,7 +50,6 @@ fi
 %config /etc/modules-load.d/facetimehd.conf
 /usr/src/%{module}-%{version}/
 /usr/share/doc/%{module}/
-/usr/lib/firmware/%{module}/
 
 %pre
 
