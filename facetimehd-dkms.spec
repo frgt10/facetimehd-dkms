@@ -1,11 +1,11 @@
-%global commitdate 20200520
-%global commit 82626d4892eeb9eb704538bf0dc49a00725ff451
+%global commitdate 20220603
+%global commit 75a2a5800aa46cbd679847b4d0863a5e3cef3b9e
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 %global srcname bcwc_pcie
 
 %define module facetimehd
-%define version 0.5.7
+%define version 0.5.18
 
 Summary: %{module} %{version} dkms package
 Name: %{module}
