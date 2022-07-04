@@ -2,7 +2,7 @@
 %global commit 75a2a5800aa46cbd679847b4d0863a5e3cef3b9e
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
-%global srcname bcwc_pcie
+%global srcname facetimehd
 
 %define module facetimehd
 %define version 0.5.18
