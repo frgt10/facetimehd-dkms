@@ -6,6 +6,10 @@ DKMS package for [Facetime HD driver](https://github.com/patjak/bcwc_pcie/).
 
 You need to manually download and install [firmware](https://github.com/patjak/bcwc_pcie/wiki/Get-Started#firmware-extraction).
 
+### Fedora
+
+The package is available in the [COPR repository](https://copr.fedorainfracloud.org/coprs/frgt10/facetimehd-dkms/).
+
 ## Known issues
 
 * Fedora 32, error load firmware on boot:
