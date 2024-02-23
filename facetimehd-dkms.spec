@@ -1,11 +1,11 @@
-%global commitdate 20240202
-%global commit ff64787c0b9f62bdd11a1276a93753fca47e32f1
+%global commitdate 20240221
+%global commit 2b287d4f5c6059b856f33cf24e151d7c2ae06598
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 %global srcname facetimehd
 
 %define module facetimehd
-%define version 0.6.8
+%define version 0.6.8a
 
 Summary: %{module} %{version} dkms package
 Name: %{module}
@@ -17,7 +17,7 @@ Requires: dkms >= 1.00
 Requires: bash
 URL: https://github.com/patjak/bcwc_pcie/
 
-Source0: https://github.com/patjak/bcwc_pcie/archive/%{commit}/%{srcname}-%{version}-%{shortcommit}.tar.gz
+Source0: https://github.com/patjak/bcwc_pcie/archive/%{commit}/%{srcname}-%{shortcommit}.tar.gz
 
 %description
 This package contains %{module} module wrapped for the DKMS framework.
