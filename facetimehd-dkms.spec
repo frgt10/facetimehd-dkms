@@ -22,6 +22,7 @@ Source0: https://github.com/patjak/bcwc_pcie/archive/%{commit}/%{srcname}-%{vers
 %description
 This package contains %{module} module wrapped for the DKMS framework.
 
+%global debug_package %{nil}
 %prep
 %setup -q -c -T -a 0
 
