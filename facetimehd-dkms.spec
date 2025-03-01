@@ -1,11 +1,11 @@
-%global commitdate 20240605
-%global commit d47bb259d9810c97488486eff7c91893ba8b6bde
+%global commitdate 20250226
+%global commit 2b984276f81f2bfefb4734b9995ee17615e6b4df
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 %global srcname facetimehd
 
 %define module facetimehd
-%define version 0.6.8.2
+%define version 0.6.8.2a
 
 Summary: %{module} %{version} dkms package
 Name: %{module}
@@ -17,7 +17,7 @@ Requires: dkms >= 1.00
 Requires: bash
 URL: https://github.com/patjak/facetimehd/
 
-Source0: https://github.com/patjak/bcwc_pcie/archive/%{commit}/%{srcname}-%{version}-%{shortcommit}.tar.gz
+Source0: https://github.com/jakintosh/facetimehd/archive/%{commit}.tar.gz
 
 %description
 This package contains %{module} module wrapped for the DKMS framework.
