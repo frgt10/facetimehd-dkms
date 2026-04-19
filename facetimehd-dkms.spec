@@ -1,83 +1,60 @@
-%global commitdate 20260417
-%global commit 805d8654f068c7c4078c550f1d8d9c629d63f157
+%global commit      805d8654f068c7c4078c550f1d8d9c629d63f157
+%global commitdate  20260417
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
+%global srcname     facetimehd
 
-%global srcname facetimehd
+Name:           %{srcname}
+Version:        0.7.0.1
+Release:        %{commitdate}git%{shortcommit}%{?dist}
+Summary:        DKMS package for Broadcom 1570 PCIe FaceTime HD webcam
+License:        GPLv2
+URL:            https://github.com/patjak/facetimehd/
+Source0:        %{URL}/archive/%{commit}.tar.gz
 
-%define module facetimehd
-%define version 0.7.0.1
-
-Summary: %{module} %{version} dkms package
-Name: %{module}
-Version: %{version}
-Release: %{commitdate}git%{shortcommit}.2dkms
-License: GPLv2
-Group: System Environment/Kernel
-Requires: dkms >= 1.00
-Requires: bash
-URL: https://github.com/patjak/facetimehd/
-
-Source0: https://github.com/patjak/facetimehd/archive/%{commit}.tar.gz
+BuildArch:      noarch
+BuildRequires:  systemd-rpm-macros
+Requires:       dkms >= 1.00
+Requires:       bash
+Requires:       systemd
 
 %description
-This package contains %{module} module wrapped for the DKMS framework.
+This package contains the source code for the facetimehd kernel module
+wrapped for the DKMS (Dynamic Kernel Module Support) framework.
+Note: This driver requires firmware to be installed separately.
 
-%global debug_package %{nil}
 %prep
-%setup -q -c -T -a 0
+%autosetup -n %{srcname}-%{commit}
 
 %install
-if [ "$RPM_BUILD_ROOT" != "/" ]; then
-	rm -rf $RPM_BUILD_ROOT
-fi
+# Install source code to /usr/src/facetimehd-0.7.0.1
+mkdir -p %{buildroot}%{_usrsrc}/%{name}-%{version}
+cp -r . %{buildroot}%{_usrsrc}/%{name}-%{version}
 
-mkdir -p $RPM_BUILD_ROOT/usr/src/%{module}-%{version}/
-cp -rf %{srcname}-%{commit}/* $RPM_BUILD_ROOT/usr/src/%{module}-%{version}/
-
-mkdir -p $RPM_BUILD_ROOT/usr/share/doc/%{module}/
-cp %{srcname}-%{commit}/README.md $RPM_BUILD_ROOT/usr/share/doc/%{module}/
-
-mkdir -p $RPM_BUILD_ROOT/etc/modules-load.d/
-echo -e "# Load facetimehd.ko at boot\nfacetimehd" > $RPM_BUILD_ROOT/etc/modules-load.d/facetimehd.conf
-
-%clean
-if [ "$RPM_BUILD_ROOT" != "/" ]; then
-	rm -rf $RPM_BUILD_ROOT
-fi
+# Create configuration for automatic module loading at boot
+mkdir -p %{buildroot}%{_modulesloaddir}
+echo "facetimehd" > %{buildroot}%{_modulesloaddir}/%{name}.conf
 
 %files
-%defattr(-,root,root)
-%config /etc/modules-load.d/facetimehd.conf
-/usr/src/%{module}-%{version}/
-/usr/share/doc/%{module}/
-
-%pre
+%license LICENSE
+%doc README.md
+%{_usrsrc}/%{name}-%{version}
+%config(noreplace) %{_modulesloaddir}/%{name}.conf
 
 %post
-dkms add -m %{module} -v %{version} --rpm_safe_upgrade
-
-	if [ `uname -r | grep -c "BOOT"` -eq 0 ] && [ -e /lib/modules/`uname -r`/build/include ]; then
-		dkms build -m %{module} -v %{version}
-		dkms install -m %{module} -v %{version}
-	elif [ `uname -r | grep -c "BOOT"` -gt 0 ]; then
-		echo -e ""
-		echo -e "Module build for the currently running kernel was skipped since you"
-		echo -e "are running a BOOT variant of the kernel."
-	else
-		echo -e ""
-		echo -e "Module build for the currently running kernel was skipped since the"
-		echo -e "kernel headers for this kernel do not seem to be installed."
-	fi
-exit 0
+# Register and build the module via DKMS
+dkms add -m %{name} -v %{version} --rpm_safe_upgrade || :
+dkms build -m %{name} -v %{version} || :
+dkms install -m %{name} -v %{version} || :
 
 %preun
-echo -e
-echo -e "Uninstall of %{module} module (version %{version}) beginning:"
-dkms remove -m %{module} -v %{version} --all --rpm_safe_upgrade
-exit 0
+# Remove all versions of the module during uninstallation
+dkms remove -m %{name} -v %{version} --all --rpm_safe_upgrade || :
 
 %changelog
+* Sun Apr 19 2026 Stanislav Ashirov <stas.ashirov@gmail.com> - 0.7.0.1-20260417git805d865%{?dist}
+- Optimized SPEC for COPR: added %%{?dist} and path macros
+- Added support for external patches via %%autosetup
+- Set BuildArch to noarch for universal deployment
 
-* Wed May 13 2020 Stanislav Ashirov <stas.ashirov@gmail.com>
-
+* Wed May 13 2020 Stanislav Ashirov <stas.ashirov@gmail.com> - 0.1
 - Initial RPM release
