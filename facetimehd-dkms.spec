@@ -1,11 +1,11 @@
-%global commitdate 20250304
-%global commit 499004489f62a6e5669044001f7ca267d2608b55
+%global commitdate 20260417
+%global commit 805d8654f068c7c4078c550f1d8d9c629d63f157
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 %global srcname facetimehd
 
 %define module facetimehd
-%define version 0.6.13
+%define version 0.7.0.1
 
 Summary: %{module} %{version} dkms package
 Name: %{module}
