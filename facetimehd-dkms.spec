@@ -1,10 +1,10 @@
-%global commit      846f1c42b6b1936aad0594b3ee6646b38df9facc
-%global commitdate  20260616
+%global commit      364b1c663583e64e27f07ed0257a7584bef095fc
+%global commitdate  20260730
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global srcname     facetimehd
 
 Name:           %{srcname}
-Version:        0.7.0.2
+Version:        0.7.0.3
 Release:        %{commitdate}git%{shortcommit}%{?dist}
 Summary:        DKMS package for Broadcom 1570 PCIe FaceTime HD webcam
 License:        GPLv2
